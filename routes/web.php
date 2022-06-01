@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Chat\HomeChatController;
 use App\Http\Controllers\Dashboard\BaseDashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -16,13 +17,8 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+Route::middleware("auth")->group(function () {
+    Route::get('/', [HomeChatController::class, "index"])->name("chats");
 });
 
 Route::get('/dashboard', [BaseDashboardController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard');
