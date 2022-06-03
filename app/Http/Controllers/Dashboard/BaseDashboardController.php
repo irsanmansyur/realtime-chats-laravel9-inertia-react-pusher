@@ -9,6 +9,7 @@ class BaseDashboardController extends Controller
 {
     public function index()
     {
+        return redirect("/");
         if (user()->hasRole("Admin"))
             return to_route("dashboard.admin");
         return inertia('Dashboard');
