@@ -26,8 +26,6 @@ createInertiaApp({
 
 InertiaProgress.init({ color: "#4B5563" });
 
-axios.defaults.withCredentials = true;
-
 window.Echo = new Echo({
     broadcaster: "pusher",
     key: process.env.MIX_PUSHER_APP_KEY,
