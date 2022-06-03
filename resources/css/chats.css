@@ -1,3 +1,11 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+.card-chat.active {
+    @apply bg-primary text-white;
+}
+.card-chat.active span,
+.card-chat.active div {
+    @apply text-white;
+}

@@ -1,0 +1,2 @@
+ketika scroll keatas dan masih ada message yang belum tampil -> jalankan fungsi loadMessageMore();
+

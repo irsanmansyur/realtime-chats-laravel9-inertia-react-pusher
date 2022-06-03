@@ -10,29 +10,21 @@ const mix = require("laravel-mix");
  | file for the application as well as bundling up all the JS files.
  |
  */
+const tailwindPlugins = [
+    require("postcss-import"),
+    require("tailwindcss"),
+    require("autoprefixer"),
+];
 
-mix.js("resources/js/app.js", "public/js")
+mix.js("resources/js/chats.js", "public/js")
     .react()
-    .js("resources/js/chats.js", "public/js")
-    .react()
+
     .webpackConfig(require("./webpack.config"))
-    .postCss("resources/css/app.css", "public/css", [
-        require("postcss-import"),
-        require("tailwindcss"),
-        require("autoprefixer"),
-    ])
+    .postCss("resources/css/chats.css", "public/css", tailwindPlugins)
+    .postCss("resources/css/app.css", "public/css", tailwindPlugins)
     .alias({
         "@": "resources/js",
     });
-mix.postCss("resources/css/errors.css", "public/css", [
-    require("postcss-import"),
-    require("tailwindcss"),
-    require("autoprefixer"),
-]).postCss("resources/css/chats.css", "public/css", [
-    require("postcss-import"),
-    require("tailwindcss"),
-    require("autoprefixer"),
-]);
 
 if (mix.inProduction()) {
     mix.version();

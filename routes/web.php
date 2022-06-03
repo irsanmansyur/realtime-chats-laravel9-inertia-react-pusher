@@ -19,6 +19,10 @@ use Inertia\Inertia;
 
 Route::middleware("auth")->group(function () {
     Route::get('/', [HomeChatController::class, "index"])->name("chats");
+    Route::get('/get-messages/{to_user}', [HomeChatController::class, "getMessages"])->name('chats.user');
+    Route::post('/get-messages-more/{to_user}', [HomeChatController::class, "loadMore"])->name('chats.user.more');
+    Route::post('/send-message/{to_user}', [HomeChatController::class, "sendMessages"])->name('chats.sending');
+    Route::get('/test', [HomeChatController::class, "test"]);
 });
 
 Route::get('/dashboard', [BaseDashboardController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard');

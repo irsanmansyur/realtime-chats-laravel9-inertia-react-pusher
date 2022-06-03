@@ -42,10 +42,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     public function getTakeThumbnailAttribute()
     {
         if (is_file($this->thumbnail))
             return asset($this->thumbnail);
         return asset(config("base.default_thumbnail"));
+    }
+    public function message()
+    {
+        return $this->hasOne(Message::class)->withDefault();
     }
 }
