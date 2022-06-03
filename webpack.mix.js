@@ -16,7 +16,9 @@ const tailwindPlugins = [
     require("autoprefixer"),
 ];
 
-mix.js("resources/js/chats.js", "public/js")
+mix.js("resources/js/app.js", "public/js")
+    .react()
+    .js("resources/js/chats.js", "public/js")
     .react()
 
     .webpackConfig(require("./webpack.config"))
