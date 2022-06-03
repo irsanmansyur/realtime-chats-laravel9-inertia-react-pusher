@@ -27,6 +27,7 @@ class DashboardComponent extends Component
             $routeDashboard = "dashboard.admin";
         else if (user()->hasRole('kasir'))
             $routeDashboard = "dashboard-kasir";
+        $routeDashboard = "dashboard";
         return view('components/menu/dashboard-menu', compact("routeDashboard"));
     }
 }
