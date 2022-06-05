@@ -4,12 +4,14 @@ import TypeChat from "@/Components/Chat/TypeChat";
 import Welcome from "@/Components/Chat/Welcome";
 import Main from "@/Layouts/Main";
 import UserAtom from "@/Utils/Auth/UserAtom";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
 const HomePage = ({ auth: { user }, peoples: ppl, ...props }) => {
     const setUser = useSetRecoilState(UserAtom);
     const [newMessage, setNewMessage] = useState(undefined);
+    const [messageRead, setMessageRead] = useState(undefined);
     const [latestTyping, setLatestTyping] = useState(undefined);
     const [peoples, setPeoples] = useState(ppl);
     const [toPeople, setToPeople] = useState({});
@@ -37,9 +39,14 @@ const HomePage = ({ auth: { user }, peoples: ppl, ...props }) => {
         let dataPengirimSebelumnya =
             peoples.data.find((p) => p.id == message.user_id) ?? FromUser;
 
+        // periksa jika  ada user yang sementara dibuka
+        if (toPeople && toPeople.id == dataPengirimSebelumnya.id) {
+            message.status_pesan = "dibaca";
+            // axios.get(route("chats.reading", message.id));
+        }
+
         // update single message
         dataPengirimSebelumnya.message = message;
-        console.log(dataPengirimSebelumnya.messages);
 
         // update messages
         const newPeople = updateMessagesPeople(dataPengirimSebelumnya, message);
@@ -57,6 +64,10 @@ const HomePage = ({ auth: { user }, peoples: ppl, ...props }) => {
     };
     const updateMessagesPeople = (peopleUpdate, newMessage) => {
         if (peopleUpdate.messages && peopleUpdate.messages.data) {
+            if (toPeople && toPeople.id == peopleUpdate.id) {
+                // send to api update message to read
+                axios.get(route("chats.reading", newMessage.id));
+            }
             peopleUpdate.messages.data = [
                 newMessage,
                 ...peopleUpdate.messages.data,
@@ -98,6 +109,33 @@ const HomePage = ({ auth: { user }, peoples: ppl, ...props }) => {
     }, [latestTyping]);
 
     useEffect(() => {
+        if (messageRead) {
+            //dapatkan data orang yg membaca pesan kita
+            let newPeople = peoples.data.find((p) => p.id == messageRead.to);
+
+            //cek dulu apakah dia punya pesannya sudah di load sebelumnya
+            if (!newPeople.messages) return;
+
+            //update pesannya
+            let newPeopleMessagesData = newPeople.messages.data.map((msg) => {
+                if (msg.id == messageRead.id) msg.status_pesan = "dibaca";
+                return msg;
+            });
+            newPeople.messages.data = newPeopleMessagesData;
+
+            setPeoples({
+                ...peoples,
+                data: peoples.data.map((ppl) => {
+                    if (ppl.id == newPeople.id) return newPeople;
+                    return ppl;
+                }),
+            });
+        }
+        return () => {
+            setMessageRead(undefined);
+        };
+    }, [messageRead]);
+    useEffect(() => {
         setUser(user);
         window.ChannnelChats = window.Echo.private("message." + user.id);
         window.ChannnelChats.listen("SendMessageToUser", (pesan) => {
@@ -106,8 +144,13 @@ const HomePage = ({ auth: { user }, peoples: ppl, ...props }) => {
         window.ChannnelChats.listen("IsPeoplesTypingMessage", (isTyping) => {
             setLatestTyping(isTyping);
         });
+        window.ChannnelChats.listen("MessageRead", (resp) => {
+            setMessageRead(resp.message);
+        });
         return () => {
             setNewMessage(undefined);
+            setLatestTyping(undefined);
+            setMessageRead(undefined);
         };
     }, []);
     return (

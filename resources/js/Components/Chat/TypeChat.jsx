@@ -7,7 +7,6 @@ function TypeChat({ message, user, people: { is_typing } }) {
     }
     if (!message)
         return <span className="text-primary">Ketuk Untuk memulai chat</span>;
-
     let text =
         message.content_singkat ??
         message.content.slice(0, 40) +

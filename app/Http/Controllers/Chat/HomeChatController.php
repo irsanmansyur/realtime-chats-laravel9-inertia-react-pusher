@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Chat;
 
 use App\Events\IsPeoplesTypingMessage;
+use App\Events\MessageRead;
 use App\Events\SendMessageToUser;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MessageResource;
@@ -63,8 +64,16 @@ class HomeChatController extends Controller
     }
     public function sendNotifIsTyping(User $to_user, Request $request)
     {
-        IsPeoplesTypingMessage::broadcast($to_user);
+        IsPeoplesTypingMessage::dispatch($to_user);
         return $to_user;
+    }
+    public function readingMessage(Message $message)
+    {
+        $message->status = config("chats.chat.DIBACA");
+        $message->save();
+
+        MessageRead::dispatch($message);
+        return $message;
     }
     public function test()
     {

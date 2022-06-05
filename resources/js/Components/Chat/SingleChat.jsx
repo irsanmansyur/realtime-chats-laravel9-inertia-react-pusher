@@ -45,6 +45,18 @@ function SingleChat({ setOpenChat, setPeople, people, user }) {
         if (!people.messages) getMessages();
         return () => {};
     }, [people.id]);
+    useEffect(() => {
+        if (people.messages) {
+            let newMessageRead = people.messages.data.map((msg) => {
+                if (msg.status_pesan != "dibaca" && msg.user_id != user.id) {
+                    msg.status_pesan = "dibaca";
+                    axios.get(route("chats.reading", msg.id));
+                }
+                return msg;
+            });
+        }
+        return () => {};
+    }, [people.messages]);
     return (
         <div className="flex-1  justify-between flex flex-col h-screen">
             <div className="flex  p-3  border-b-2 shadow  bg-white relative items-center ">

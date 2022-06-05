@@ -16,7 +16,7 @@ class MessageResource extends JsonResource
     {
         return array_merge(parent::toArray($request), [
             "its_me" => $this->user_id == user('id'),
-            'status_pesan' => "terkirim",
+            'status_pesan' => $this->status,
             "from_user" => new FromUserResource($this->from_user),
             "to_user" => new FromUserResource($this->to_user),
         ]);

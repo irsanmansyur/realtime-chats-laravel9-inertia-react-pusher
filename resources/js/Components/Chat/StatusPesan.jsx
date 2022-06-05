@@ -6,10 +6,10 @@ function StatusPesan({ status }) {
         <div className="StatusPesan flex items-center justify-center transform transition ease-in-out duration-500">
             {status == "proses" ? (
                 <CgSpinner className="animate-spin w-5 h-5" />
-            ) : status == "terkirim" ? (
-                <BsCheck className={`w-5 h-5`} />
-            ) : (
+            ) : status == "dibaca" ? (
                 <BsCheckAll className={`w-5 h-5`} />
+            ) : (
+                <BsCheck className={`w-5 h-5`} />
             )}
         </div>
     );
