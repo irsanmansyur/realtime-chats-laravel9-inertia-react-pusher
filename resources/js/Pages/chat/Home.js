@@ -10,6 +10,7 @@ import { useSetRecoilState } from "recoil";
 const HomePage = ({ auth: { user }, peoples: ppl, ...props }) => {
     const setUser = useSetRecoilState(UserAtom);
     const [newMessage, setNewMessage] = useState(undefined);
+    const [latestTyping, setLatestTyping] = useState(undefined);
     const [peoples, setPeoples] = useState(ppl);
     const [toPeople, setToPeople] = useState({});
     const [openChat, setOpenChat] = useState(false);
@@ -67,12 +68,43 @@ const HomePage = ({ auth: { user }, peoples: ppl, ...props }) => {
         newMessage && updateMessagePeople(newMessage);
         return () => {};
     }, [newMessage]);
+    useEffect(() => {
+        if (latestTyping) {
+            let newDataPeoples = peoples.data.map((p) => {
+                if (p.id == latestTyping.from.id) p.is_typing = true;
+                return p;
+            });
+            setPeoples({
+                ...peoples,
+                data: newDataPeoples,
+            });
+
+            // hapus sedang mengetik ketika delai 5 detik
+            setTimeout(function () {
+                let newDataPeoples = peoples.data.map((p) => {
+                    if (p.id == latestTyping.from.id) p.is_typing = false;
+                    return p;
+                });
+                setPeoples({
+                    ...peoples,
+                    data: newDataPeoples,
+                });
+            }, 5000);
+        }
+
+        return () => {
+            setLatestTyping(undefined);
+        };
+    }, [latestTyping]);
 
     useEffect(() => {
         setUser(user);
         window.ChannnelChats = window.Echo.private("message." + user.id);
         window.ChannnelChats.listen("SendMessageToUser", (pesan) => {
             setNewMessage(pesan.message);
+        });
+        window.ChannnelChats.listen("IsPeoplesTypingMessage", (isTyping) => {
+            setLatestTyping(isTyping);
         });
         return () => {
             setNewMessage(undefined);
@@ -90,7 +122,7 @@ const HomePage = ({ auth: { user }, peoples: ppl, ...props }) => {
                     <div className="flex gap-4 items-center">
                         <div className="container-image">
                             <img
-                                src=""
+                                src={user.thumbnail}
                                 alt=""
                                 className="w-[58px] h-[58px] rounded-full bg-white"
                             />

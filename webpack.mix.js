@@ -18,13 +18,10 @@ const tailwindPlugins = [
 
 mix.js("resources/js/app.js", "public/js")
     .react()
-    .js("resources/js/chats.js", "public/js")
-    .react()
 
     .webpackConfig(require("./webpack.config"))
-    .postCss("resources/css/chats.css", "public/css", tailwindPlugins)
     .postCss("resources/css/app.css", "public/css", tailwindPlugins)
-    .alias({
+    .alias({ 
         "@": "resources/js",
     });
 

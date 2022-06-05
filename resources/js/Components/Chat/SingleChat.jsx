@@ -47,7 +47,7 @@ function SingleChat({ setOpenChat, setPeople, people, user }) {
     }, [people.id]);
     return (
         <div className="flex-1  justify-between flex flex-col h-screen">
-            <div className="flex justify-between p-3  border-b-2 shadow  bg-white relative items-center ">
+            <div className="flex  p-3  border-b-2 shadow  bg-white relative items-center ">
                 <div
                     className="border rounded p-1 flex items-center justify-center group hover:bg-gray-200 cursor-pointer "
                     onClick={(e) => {
@@ -55,9 +55,9 @@ function SingleChat({ setOpenChat, setPeople, people, user }) {
                         setOpenChat(false);
                     }}
                 >
-                    <BsArrowDown className="w-5 h-5 group-hover:rotate-90 transform duration-500 ease-in-out " />
+                    <BsArrowDown className="w-5 h-5 rotate-90 transform duration-500 ease-in-out " />
                 </div>
-                <div className="flex items-center justify-end">
+                <div className="flex items-center justify-end flex-auto">
                     <div className="flex flex-col leading-tight text-right mr-3">
                         <div className="text-2xl mt-1 flex items-center">
                             <span className="text-gray-700 ">

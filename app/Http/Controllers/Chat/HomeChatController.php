@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Chat;
 
+use App\Events\IsPeoplesTypingMessage;
 use App\Events\SendMessageToUser;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MessageResource;
@@ -18,8 +19,7 @@ class HomeChatController extends Controller
     use MessageTrait;
     public function index()
     {
-        $peoples = User::whereNotIn("id", [user('id')])->paginate(20);
-        Inertia::setRootView("chats");
+        $peoples = User::whereNotIn("id", [user('id')])->get();
         return Inertia::render("chat/Home", [
             "peoples" => UserChatResource::collection($peoples)
         ]);
@@ -60,6 +60,11 @@ class HomeChatController extends Controller
         SendMessageToUser::dispatch($messageResource);
         if ($request->wantsJson())
             return $messageResource;
+    }
+    public function sendNotifIsTyping(User $to_user, Request $request)
+    {
+        IsPeoplesTypingMessage::broadcast($to_user);
+        return $to_user;
     }
     public function test()
     {

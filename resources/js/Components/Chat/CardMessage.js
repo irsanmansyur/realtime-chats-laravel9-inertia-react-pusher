@@ -40,7 +40,11 @@ function CardMessage({
                         <span className="block  group-hover:font-bold ">
                             {people.name}
                         </span>
-                        <TypeChat user={user} message={people.message} />
+                        <TypeChat
+                            user={user}
+                            message={people.message}
+                            people={people}
+                        />
                     </div>
                 </div>
             </div>

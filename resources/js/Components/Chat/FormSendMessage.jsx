@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function FormSendMessage({ toPeople, callback }) {
     const [mytype, setMytype] = useState("");
@@ -8,6 +8,14 @@ function FormSendMessage({ toPeople, callback }) {
         setMytype("");
         return callback({ content: mytype });
     };
+    useEffect(() => {
+        let delayTimeOutFunction = null;
+        if (mytype != "")
+            delayTimeOutFunction = setTimeout(async () => {
+                await axios.get("/send-notif-istyping-to-/" + toPeople.id);
+            }, 700); // denounce delay
+        return () => clearTimeout(delayTimeOutFunction);
+    }, [mytype]);
     return (
         <div className="FormSendMessage border-t-2 border-gray-200 px-4 py-3 mb-2 sm:mb-0 ">
             <form

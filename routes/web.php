@@ -22,6 +22,7 @@ Route::middleware("auth")->group(function () {
     Route::get('/get-messages/{to_user}', [HomeChatController::class, "getMessages"])->name('chats.user');
     Route::post('/get-messages-more/{to_user}', [HomeChatController::class, "loadMore"])->name('chats.user.more');
     Route::post('/send-message/{to_user}', [HomeChatController::class, "sendMessages"])->name('chats.sending');
+    Route::get('/send-notif-istyping-to-/{to_user}', [HomeChatController::class, "sendNotifIsTyping"])->name('chats.sending');
     Route::get('/test', [HomeChatController::class, "test"]);
 });
 

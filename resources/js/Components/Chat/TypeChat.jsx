@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { MdOutlineMessage, MdMessage } from "react-icons/md";
 import { TbMessage2Share } from "react-icons/tb";
-function TypeChat({ message, user }) {
+function TypeChat({ message, user, people: { is_typing } }) {
+    if (is_typing === true) {
+        return <span className="text-gray-400">sedang mengetik...</span>;
+    }
     if (!message)
         return <span className="text-primary">Ketuk Untuk memulai chat</span>;
 
