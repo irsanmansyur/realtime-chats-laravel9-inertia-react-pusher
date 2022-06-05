@@ -24,7 +24,6 @@ Route::middleware("auth")->group(function () {
     Route::post('/send-message/{to_user}', [HomeChatController::class, "sendMessages"])->name('chats.sending');
     Route::get('/read-message/{message}', [HomeChatController::class, "readingMessage"])->name('chats.reading');
     Route::get('/send-notif-istyping-to-/{to_user}', [HomeChatController::class, "sendNotifIsTyping"])->name('chats.is_typing');
-    Route::get('/test', [HomeChatController::class, "test"]);
 });
 
 Route::get('/dashboard', [BaseDashboardController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard');
